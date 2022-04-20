@@ -30,6 +30,7 @@
 #include <crtdbg.h>
 #endif
 #include <windows.h>
+#include <shlwapi.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -390,7 +391,8 @@ void *dlopen( const char *file, int mode )
              * to UNIX's search paths (start with system folders instead of current
              * folder).
              */
-            hModule = LoadLibraryExA( lpFileName, NULL, LOAD_WITH_ALTERED_SEARCH_PATH );
+            DWORD dwFlags = PathIsRelativeA(lpFileName) ? 0 : LOAD_WITH_ALTERED_SEARCH_PATH;
+            hModule = LoadLibraryExA(lpFileName, NULL, dwFlags);
 
             if( !hModule )
             {
